@@ -13,6 +13,9 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.get("/health", (req, res) => res.json({ ok: true }));
+app.get("/", (req, res) =>
+  res.json({ service: "VAULT API", status: "running" }),
+);
 app.use("/auth", authRoutes);
 
 app.use(notFound);
