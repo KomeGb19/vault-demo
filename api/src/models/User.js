@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema(
     },
     passwordHash: { type: String, required: true },
     balance: { type: Number, default: 1_000_000 }, 
-    savedBanks: { type: [String], default: [] }, 
   },
   { timestamps: true },
 );

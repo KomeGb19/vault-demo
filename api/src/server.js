@@ -1,5 +1,4 @@
 import "dotenv/config";
-console.log("URI loaded:", !!process.env.MONGODB_URI);
 import mongoose from "mongoose";
 import app from "./app.js";
 
