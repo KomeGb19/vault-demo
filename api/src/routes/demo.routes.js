@@ -5,7 +5,13 @@ import HomeChangeRequest from "../models/HomeChangeRequest.js";
 import Payout from "../models/Payout.js";
 import CheckLog from "../models/CheckLog.js";
 import { requireAuth } from "../middleware/auth.js";
-import { getNow, getOffset, advance, resetClock } from "../services/clock.js";
+import {
+  getNow,
+  getOffset,
+  advance,
+  resetClock,
+  setLagosTime,
+} from "../services/clock.js";
 
 const router = Router();
 
@@ -24,6 +30,20 @@ router.post("/advance", async (req, res, next) => {
     if (![1, 24].includes(hours))
       return res.status(400).json({ error: "hours must be 1 or 24" });
     await advance(hours);
+    res.json({ now: await getNow() });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.post("/set-time", async (req, res, next) => {
+  try {
+    const m = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(req.body?.time || "");
+    if (!m)
+      return res
+        .status(400)
+        .json({ error: "time must be HH:MM (24h, Lagos time)" });
+    await setLagosTime(Number(m[1]), Number(m[2]));
     res.json({ now: await getNow() });
   } catch (e) {
     next(e);
